@@ -96,6 +96,7 @@ src/
 
 ```
 git clone https://github.com/rk-huynhdd/vuejs-training.git
+cd my-project
 
 ```
 
