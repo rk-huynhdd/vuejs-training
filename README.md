@@ -115,5 +115,5 @@ npm run dev
 ### open browser and go to
 
 ```
-ttp://localhost:5173
+http://localhost:5173
 ```
