@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "ant-design-vue": "^4.2.6",
+    "axios": "^1.13.4",
+    "pinia": "^3.0.4",
+    "vue-router": "^4.6.4"
+  }
+}
