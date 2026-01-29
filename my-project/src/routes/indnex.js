@@ -5,6 +5,9 @@ import EmployeeList from "../pages/employee/EmployeeList.vue";
 import EmployeeDetails from "../pages/employee/EmployeeDetails.vue";
 import UserProfile from "../pages/user/UserProfile.vue";
 import useAuthStore from "../stores/auth";
+import Cookies from "js-cookie";
+import NotAllowed from "../pages/system/NotAllowed.vue";
+import NotFound from "../pages/system/NotFound.vue";
 
 const routes = [
     {
@@ -15,10 +18,9 @@ const routes = [
             requireLoggedIn: true
         },
         beforeEnter:(to, from)=>{
-            const authStore = useAuthStore();
-            if(authStore.role!=='admin'){
+            if(localStorage.getItem("role")!=='admin'){
                 return{
-                    name:'Login'
+                    name:'NotAllowed'
                 }
             }
         }
@@ -53,6 +55,15 @@ const routes = [
          meta:{
             requireLoggedIn: true
         }
+    }, 
+    {    path:"/403",
+        name:'NotAllowed',
+        component:NotAllowed
+    },
+    {
+        path:"/:pathMatch(.*)*",
+        name:'NotFound',
+        component:NotFound
     }
   
     
@@ -62,8 +73,12 @@ const router = createRouter({
     history:createWebHistory(),
     routes
 })
-router.beforeEach((to, from )=>{
-    const authStore = useAuthStore(); 
+router.beforeEach( (to, from )=>{
+    const authStore = useAuthStore();
+    if(Cookies.get('userToken')){
+        authStore.getUser()
+    } 
+ 
     if(to.meta.requireLoggedIn && ! authStore.isLoggedIn){
         
         return{name:"Login"}
