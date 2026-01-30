@@ -12,6 +12,7 @@ clientApi.interceptors.request.use((config)=>{
     if(Cookies.get("userToken")){
         config.headers.Authorization=  `Bearer ${Cookies.get("userToken")}` 
     }
+    
     return config
 }, (error)=>{
     return Promise.reject(error)
@@ -20,6 +21,7 @@ clientApi.interceptors.request.use((config)=>{
 clientApi.interceptors.response.use((response )=>{
  return response.data
 }, (error)=>{
+    
     return Promise.reject(error)
 })
 

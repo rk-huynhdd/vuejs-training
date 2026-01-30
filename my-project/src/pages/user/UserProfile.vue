@@ -1,10 +1,9 @@
 <script setup>
+import MainLayout from "../../layouts/MainLayout.vue";
 import useAuthStore from "../../stores/auth";
 
 const authStore = useAuthStore();
 </script>
 <template>
-  Profile
-  <h3>Welcome {{ authStore.user.username }}</h3>
-  <p>{{ authStore.user.role }}</p>
+  <MainLayout></MainLayout>
 </template>

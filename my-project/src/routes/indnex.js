@@ -12,6 +12,10 @@ import NotFound from "../pages/system/NotFound.vue";
 const routes = [
     {
         path:"/",
+        redirect:"/login"
+    },
+    {
+        path:"/dashboard",
         name:"Dashboard",
         component:Dashboard,
         meta:{
@@ -30,7 +34,24 @@ const routes = [
     {
         path:"/login",
         name:'Login',
-        component:Login
+        component:Login, 
+        beforeEnter:(to, from)=>{
+            if(Cookies.get('userToken')){
+                if(localStorage.getItem("role")==="admin"){
+                return{
+                    name:"Dashboard"
+                }
+               
+
+            }
+            else {
+                return{
+                    path:'/profile'
+                }
+            }
+            }
+            
+        }
     },
     {
         path:"/employees",
