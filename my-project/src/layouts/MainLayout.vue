@@ -12,7 +12,6 @@ const selectedKeys = ref(["dashboard"]);
 
 const authStore = useAuthStore();
 const handleLogout = () => {
-  console.log("ok");
   Modal.confirm({
     title: "Are you sure want to logout ?",
     icon: h(ExclamationCircleOutlined),

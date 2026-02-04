@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import useUiStore from "./UIstore";
-import { getEmployee } from "../api/employeeApi";
+import { getEmployee, getOne } from "../api/employeeApi";
 
 const useEmployees = defineStore('employees', ()=>{
     const employeeList = ref([]);
+    const currentEmployee = ref({}); 
+    
     const getData = async()=>{
         const UIstore = useUiStore();
         UIstore.isLoading= true;
@@ -21,7 +23,47 @@ const useEmployees = defineStore('employees', ()=>{
        }
 
     }
-    return{employeeList, getData}
+   const getOneEmployee = async (id)=>{
+    const UIstore = useUiStore();
+    UIstore.isLoading=true; 
+    try{
+        const employee = await getOne(id);
+        currentEmployee.value= employee;
+    }
+    catch(err){
+        UIstore.error= err
+    }
+    finally{
+        UIstore.isLoading=false
+    }
+   
+    
+    
+   }
+   const deleteEmployee = (id)=>{
+    const UIstore= useUiStore();
+    UIstore.isLoading= true; 
+    setTimeout(()=>{
+        let newEmployees; 
+        if(id.length>0){
+          newEmployees = employeeList.value.filter((employee)=>{
+        return !id.includes(employee.id)
+    }) 
+        }
+        else{
+  newEmployees = employeeList.value.filter((employee)=>{
+        return employee.id!==id
+    })
+        }
+    
+    employeeList.value= newEmployees
+    UIstore.isLoading=false
+
+    }, 3000)
+  
+   }
+   
+    return{employeeList, getData, getOneEmployee, currentEmployee, deleteEmployee}
 })  
 
 export default useEmployees
