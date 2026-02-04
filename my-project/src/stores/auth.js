@@ -25,7 +25,7 @@ const useAuthStore = defineStore('auth', ()=>{
             router.push("/dashboard")
           }
           else{
-            router.push("/profile")
+            router.push("/employees")
           }
               
 

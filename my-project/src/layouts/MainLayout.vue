@@ -1,5 +1,6 @@
 <script setup>
 import { ref, h } from "vue";
+import { useRouter } from "vue-router";
 import {
   UserOutlined,
   UploadOutlined,
@@ -9,7 +10,7 @@ import {
 import useAuthStore from "../stores/auth";
 import { Modal } from "ant-design-vue";
 const selectedKeys = ref(["dashboard"]);
-
+const router = useRouter();
 const authStore = useAuthStore();
 const handleLogout = () => {
   Modal.confirm({
@@ -25,7 +26,11 @@ const handleLogout = () => {
 </script>
 <template>
   <a-layout style="min-height: 100vh">
-    <a-layout-sider v-model:collapsed="collapsed" collapsible>
+    <a-layout-sider
+      v-model:collapsed="collapsed"
+      collapsible
+      v-if="authStore.user.role === 'admin'"
+    >
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
         <a-menu-item key="dashboard">
           <user-outlined />
@@ -55,11 +60,18 @@ const handleLogout = () => {
           :style="{ height: '100%' }"
         >
           <h3>Welcome {{ authStore.user.username }}</h3>
+
           <a-avatar
             :size="{ xs: 24, sm: 32, md: 40, lg: 48, xl: 48, xxl: 54 }"
             :src="authStore.user.image"
+            @click="router.push('/profile')"
           >
           </a-avatar>
+
+          <a-button type="primary" ghost @click="router.push('/profile')">
+            <UserOutlined /> View profile</a-button
+          >
+
           <a-button type="primary" danger @click="handleLogout"
             ><LogoutOutlined /> Logout</a-button
           >

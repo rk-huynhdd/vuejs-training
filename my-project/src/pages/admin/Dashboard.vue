@@ -11,6 +11,8 @@ const authStore = useAuthStore();
 const UIStore = useUiStore();
 const name = ref("");
 const query = ref("");
+const age = ref(0);
+
 const filteredEmployees = computed(() => {
   const newList = employeeStore.employeeList.filter((person) => {
     return person.username.includes(query.value.toLocaleLowerCase().trim());

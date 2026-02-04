@@ -11,8 +11,8 @@ const UIStore = useUiStore();
 
 const handleLogin = async () => {
   await authStore.login({
-    username: userName.value,
-    password: password.value,
+    username: userName.value.trim(),
+    password: password.value.trim(),
   });
 };
 </script>

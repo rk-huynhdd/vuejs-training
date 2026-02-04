@@ -4,6 +4,10 @@ import useEmployees from "../../stores/employee";
 import { useRoute, useRouter } from "vue-router";
 import useUiStore from "../../stores/UIstore";
 import useAuthStore from "../../stores/auth";
+import { message } from "ant-design-vue";
+import { Modal } from "ant-design-vue";
+import { createVNode } from "vue";
+import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 const employeeStore = useEmployees();
 const UIStore = useUiStore();
 const route = useRoute();
@@ -11,28 +15,51 @@ const router = useRouter();
 const userId = route.params.id;
 const authStore = useAuthStore();
 const filteredEmployee = computed(() => {
+  const index = employeeStore.employeeList.findIndex((employee) => {
+    return employee.id === parseInt(userId);
+  });
+
   const employee = {};
-  for (const attr of Object.keys(employeeStore.currentEmployee)) {
-    if (
-      attr === "id" ||
-      attr === "firstName" ||
-      attr === "lastName" ||
-      attr === "age" ||
-      attr === "gender" ||
-      attr === "birthDate" ||
-      attr === "email" ||
-      attr === "phone"
-    ) {
-      employee[attr] = employeeStore.currentEmployee[attr];
+  if (index !== -1) {
+    for (const attr of Object.keys(employeeStore.employeeList[index])) {
+      if (
+        attr === "id" ||
+        attr === "firstName" ||
+        attr === "lastName" ||
+        attr === "age" ||
+        attr === "gender" ||
+        attr === "birthDate" ||
+        attr === "email" ||
+        attr === "phone"
+      ) {
+        employee[attr] = employeeStore.employeeList[index][attr];
+      }
     }
-    employee.title = employeeStore.currentEmployee.company.title;
-    employee.department = employeeStore.currentEmployee.company.department;
+    employee.title = employeeStore.employeeList[index].company.title;
+    employee.department = employeeStore.employeeList[index].company.department;
   }
+
   return employee;
 });
+const handleSave = (id) => {
+  Modal.confirm({
+    title: "Do you Want to save these changes ? ",
+    icon: createVNode(ExclamationCircleOutlined),
+
+    onOk() {
+      employeeStore.getUpdated(id, filteredEmployee.value);
+      if (UIStore.showSuccess) {
+        message.success("Saved successfully !!");
+      }
+    },
+    onCancel() {},
+    class: "test",
+  });
+};
 onMounted(async () => {
   await employeeStore.getData();
   await employeeStore.getOneEmployee(userId);
+
   document.title = employeeStore.currentEmployee.username;
 });
 </script>
@@ -40,7 +67,7 @@ onMounted(async () => {
   <a-page-header
     style="border: 1px solid rgb(235, 237, 240)"
     title="Back"
-    @back="() => router.push('/dashboard')"
+    @back="() => router.back()"
   />
   <a-flex value="vertical" :style="{ marginTop: '35px' }" gap="2px">
     <a-card
@@ -95,8 +122,14 @@ onMounted(async () => {
             v-model="filteredEmployee[atr]"
             v-if="authStore.user.role === 'admin'"
           />
+          <div v-else>{{ filteredEmployee[atr] }}</div>
         </a-col>
       </a-row>
+      <a-flex justify="flex-end">
+        <a-button type="primary" @click="handleSave(parseInt(userId))">
+          Save changes</a-button
+        ></a-flex
+      >
     </a-card>
   </a-flex>
 </template>

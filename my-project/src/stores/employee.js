@@ -62,8 +62,26 @@ const useEmployees = defineStore('employees', ()=>{
     }, 3000)
   
    }
+   const getUpdated = (id, obj )=>{
+    console.log("updated")
+    const UIStore = useUiStore();
+    UIStore.isLoading=true; 
+ 
+    const index = employeeList.value.findIndex((employee)=>{
+        return employee.id ===id
+    })
+    
+
    
-    return{employeeList, getData, getOneEmployee, currentEmployee, deleteEmployee}
+  for (const atr of Object.keys(obj)){
+    employeeList.value[index][atr]= obj[atr]; 
+  } 
+  UIStore.isLoading=false
+  UIStore.showSuccess= true
+}
+
+   
+    return{employeeList, getData, getOneEmployee, currentEmployee, deleteEmployee, getUpdated}
 })  
 
 export default useEmployees
