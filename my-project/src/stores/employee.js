@@ -57,13 +57,14 @@ const useEmployees = defineStore('employees', ()=>{
         }
     
     employeeList.value= newEmployees
-    UIstore.isLoading=false
+    UIstore.isLoading=false;
+   UIstore.showSuccess=true
 
     }, 3000)
   
    }
    const getUpdated = (id, obj )=>{
-    console.log("updated")
+   
     const UIStore = useUiStore();
     UIStore.isLoading=true; 
  

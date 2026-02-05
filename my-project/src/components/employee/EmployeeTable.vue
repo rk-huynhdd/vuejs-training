@@ -4,6 +4,14 @@ import useEmployees from "../../stores/employee";
 import useUiStore from "../../stores/UIstore";
 import { useRouter } from "vue-router";
 import { notification } from "ant-design-vue";
+import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import { createVNode } from "vue";
+import { Modal } from "ant-design-vue";
+const employeeStore = useEmployees();
+const employeeList = defineModel("list");
+const criteria = defineModel("criteria");
+const router = useRouter();
+const UIStore = useUiStore();
 const columns = [
   {
     title: "ID",
@@ -14,6 +22,7 @@ const columns = [
     title: "Name",
     dataIndex: "username",
     key: "name",
+    sorter: true,
   },
   {
     title: "Avatar",
@@ -44,10 +53,7 @@ const openNotification = () => {
     style: { color: "red" },
   });
 };
-const employeeStore = useEmployees();
-const employeeList = defineModel("list");
-const router = useRouter();
-const UIStore = useUiStore();
+
 const selected = ref([]);
 const rowSelection = computed(() => {
   return {
@@ -57,6 +63,27 @@ const rowSelection = computed(() => {
     },
   };
 });
+const handleChange = (pagination, filter, sorter) => {
+  UIStore.isLoading = true;
+  setTimeout(() => {
+    criteria.value.sort = sorter.order;
+    UIStore.isLoading = false;
+  }, 3000);
+};
+const handleDelete = (id) => {
+  Modal.confirm({
+    title: "Do you Want to delete this employee ?",
+    icon: createVNode(ExclamationCircleOutlined),
+
+    onOk() {
+      employeeStore.deleteEmployee(id);
+      openNotification();
+      selected.value = [];
+    },
+    onCancel() {},
+    class: "test",
+  });
+};
 onMounted(async () => {
   await employeeStore.getData();
 });
@@ -67,12 +94,7 @@ onMounted(async () => {
     danger
     v-if="selected.length > 0"
     :style="{ marginLeft: '50px' }"
-    @click="
-      () => {
-        employeeStore.deleteEmployee(selected);
-        openNotification();
-      }
-    "
+    @click="handleDelete(selected)"
   >
     Delete many</a-button
   >
@@ -84,6 +106,7 @@ onMounted(async () => {
     :data-source="employeeList"
     :row-selection="rowSelection"
     row-key="id"
+    @change="handleChange"
   >
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'avt'">
@@ -102,12 +125,7 @@ onMounted(async () => {
             type="primary"
             danger
             size="small"
-            @click="
-              () => {
-                employeeStore.deleteEmployee(record.id);
-                openNotification();
-              }
-            "
+            @click="handleDelete(record.id)"
             >Delete</a-button
           >
         </a-flex>

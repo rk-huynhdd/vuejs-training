@@ -126,7 +126,11 @@ onMounted(async () => {
         </a-col>
       </a-row>
       <a-flex justify="flex-end">
-        <a-button type="primary" @click="handleSave(parseInt(userId))">
+        <a-button
+          type="primary"
+          @click="handleSave(parseInt(userId))"
+          v-if="authStore.user.role === 'admin'"
+        >
           Save changes</a-button
         ></a-flex
       >
