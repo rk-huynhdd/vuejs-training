@@ -1,12 +1,17 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, h } from "vue";
 import useEmployees from "../../stores/employee";
 import useUiStore from "../../stores/UIstore";
 import { useRouter } from "vue-router";
 import { notification } from "ant-design-vue";
-import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import {
+  ExclamationCircleOutlined,
+  VerticalAlignBottomOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons-vue";
 import { createVNode } from "vue";
 import { Modal } from "ant-design-vue";
+import exportCSV from "../../composable/useExportCSV";
 const employeeStore = useEmployees();
 const employeeList = defineModel("list");
 const criteria = defineModel("criteria");
@@ -84,22 +89,46 @@ const handleDelete = (id) => {
     class: "test",
   });
 };
+const handleExport = () => {
+  exportCSV(columns.slice(0, [columns.length - 1]), employeeList.value);
+};
+const loadingConfig = computed(() => {
+  return {
+    spinning: UIStore.isLoading,
+
+    indicator: h(LoadingOutlined, {
+      style: {
+        fontSize: "40px",
+        color: "cyan",
+      },
+      spin: true,
+    }),
+  };
+});
 onMounted(async () => {
   await employeeStore.getData();
 });
 </script>
 <template>
-  <a-button
-    type="primary"
-    danger
-    v-if="selected.length > 0"
-    :style="{ marginLeft: '50px' }"
-    @click="handleDelete(selected)"
-  >
-    Delete many</a-button
-  >
+  <a-flex justify="flex-end">
+    <a-button
+      type="primary"
+      danger
+      v-if="selected.length > 0"
+      :style="{ marginLeft: '50px' }"
+      @click="handleDelete(selected)"
+    >
+      Delete many</a-button
+    >
+    <a-button type="primary" @click="handleExport">
+      <VerticalAlignBottomOutlined /> Export to CSV</a-button
+    >
+  </a-flex>
+  <div class="spin-container" v-if="UIStore.isLoading">
+    <a-spin :spinning="UIStore.isLoading" size="large"> </a-spin>
+  </div>
   <a-table
-    :loading="UIStore.isLoading"
+    :loading="false"
     :columns="columns"
     :pagination="{ pageSize: 10 }"
     :scroll="{ y: 600, x: 'max-content' }"
@@ -133,3 +162,18 @@ onMounted(async () => {
     </template>
   </a-table>
 </template>
+<style scoped>
+.spin-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+</style>

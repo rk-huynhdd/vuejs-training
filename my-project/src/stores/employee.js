@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref,  } from "vue";
 import useUiStore from "./UIstore";
 import { getEmployee, getOne } from "../api/employeeApi";
 
@@ -80,9 +80,22 @@ const useEmployees = defineStore('employees', ()=>{
   UIStore.isLoading=false
   UIStore.showSuccess= true
 }
-
+const titleList = computed(() => {
+  let list = new Set();
+  employeeList.value.forEach((employee) => {
+    list.add(employee.company.title);
+  });
+  return [...list];
+});
+const departmentList = computed(() => {
+  let list = new Set();
+  employeeList.value.forEach((employee) => {
+    list.add(employee.company.department);
+  });
+  return [...list];
+});
    
-    return{employeeList, getData, getOneEmployee, currentEmployee, deleteEmployee, getUpdated}
+    return{employeeList, getData, getOneEmployee, currentEmployee, deleteEmployee, getUpdated, departmentList, titleList}
 })  
 
 export default useEmployees

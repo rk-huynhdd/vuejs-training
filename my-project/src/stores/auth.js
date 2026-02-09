@@ -49,7 +49,7 @@ const useAuthStore = defineStore('auth', ()=>{
       catch(err){
         if(err.status===401){
           const tokens = await getRefreshToken();
-          Cookies.set("refresh", tokens.refreshToken);
+          Cookies.set("refresh", tokens.refreshToken);       
           Cookies.set("userToken", tokens.accessToken)
           
         }

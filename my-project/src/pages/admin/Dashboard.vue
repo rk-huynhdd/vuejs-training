@@ -12,7 +12,6 @@ const UIStore = useUiStore();
 const name = ref("");
 const query = ref("");
 const criteria = ref({});
-const age = ref(0);
 
 const filteredEmployees = computed(() => {
   let newList = employeeStore.employeeList.filter((person) => {
@@ -42,6 +41,10 @@ const handleSearch = () => {
     UIStore.isLoading = false;
   }, 3000);
 };
+
+onMounted(async () => {
+  await employeeStore.getData();
+});
 </script>
 <template>
   <MainLayout>
@@ -54,66 +57,27 @@ const handleSearch = () => {
       style="width: 500px; height: 50px"
       @search="handleSearch"
     />
-    <a-dropdown>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item
-            :style="{ background: '#CCCCCC' }"
-            @click="
-              () => {
-                criteria.department = '';
-              }
-            "
-          >
-            None</a-menu-item
-          >
-          <a-menu-item
-            v-for="employee in employeeStore.employeeList"
-            @click="
-              () => {
-                criteria.department = employee.company.department;
-              }
-            "
-          >
-            {{ employee.company.department }}
-          </a-menu-item>
-        </a-menu>
+    <a-select v-model:value="criteria.department" style="width: 300px">
+      <template #placeholder>
+        <HomeOutlined style="margin-right: 10px" /> Select your department
       </template>
-      <a-button type="primary" ghost style="margin-left: 15px">
-        <home-outlined />
-        {{ criteria.department ? criteria.department : "Department" }}
-      </a-button>
-    </a-dropdown>
-    <a-dropdown>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item
-            :style="{ background: '#CCCCCC' }"
-            @click="
-              () => {
-                criteria.title = '';
-              }
-            "
-          >
-            None</a-menu-item
-          >
-          <a-menu-item
-            v-for="employee in employeeStore.employeeList"
-            @click="
-              () => {
-                criteria.title = employee.company.title;
-              }
-            "
-          >
-            {{ employee.company.title }}
-          </a-menu-item>
-        </a-menu>
+      <a-select-option value=""> All </a-select-option>
+      <a-select-option
+        v-for="department in employeeStore.departmentList"
+        :value="department"
+        >{{ department }}
+      </a-select-option>
+    </a-select>
+
+    <a-select v-model:value="criteria.title" style="width: 300px">
+      <template #placeholder>
+        <ContactsOutlined style="margin-right: 10px" /> Select your title
       </template>
-      <a-button type="primary" ghost style="margin-left: 15px">
-        <ContactsOutlined />
-        {{ criteria.title ? criteria.title : "Title" }}
-      </a-button>
-    </a-dropdown>
+      <a-select-option value=""> All </a-select-option>
+      <a-select-option v-for="title in employeeStore.titleList" :value="title"
+        >{{ title }}
+      </a-select-option>
+    </a-select>
 
     <EmployeeTable
       v-model:list="filteredEmployees"
