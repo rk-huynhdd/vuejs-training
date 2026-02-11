@@ -8,11 +8,27 @@ import useAuthStore from "../stores/auth";
 import Cookies from "js-cookie";
 import NotAllowed from "../pages/system/NotAllowed.vue";
 import NotFound from "../pages/system/NotFound.vue";
+import Chart from "../pages/admin/Chart.vue";
 
 const routes = [
     {
         path:"/",
         redirect:"/login"
+    },
+    {
+         path:"/chart",
+         name:"Chart",
+         component:Chart,
+         meta:{
+            requireLoggedIn:true
+         },
+           beforeEnter:(to, from)=>{
+            if(localStorage.getItem("role")!=='admin'){
+                return{
+                    name:'NotAllowed'
+                }
+            }
+        }
     },
     {
         path:"/dashboard",
@@ -46,7 +62,7 @@ const routes = [
             }
             else {
                 return{
-                    path:'/profile'
+                    path:'/employees'
                 }
             }
             }

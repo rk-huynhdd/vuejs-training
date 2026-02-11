@@ -94,8 +94,47 @@ const departmentList = computed(() => {
   });
   return [...list];
 });
-   
-    return{employeeList, getData, getOneEmployee, currentEmployee, deleteEmployee, getUpdated, departmentList, titleList}
+// dữ liệu để thống kê 
+const maleNumber = computed(()=>{
+  return employeeList.value.filter((employee)=>{
+    return employee.gender==='male'
+  }).length
+})
+const femaleNumber = computed(()=>{
+   return employeeList.value.filter((employee)=>{
+    return employee.gender==='female'
+  }).length
+})
+const departmentData = computed(()=>{
+  const staticList =[]; 
+  departmentList.value.forEach((department)=>{
+    
+   const employeeNumber = employeeList.value.filter((employee)=>{
+    return employee.company.department===department
+   }).length;
+   staticList.push({
+    type:department,
+    value: employeeNumber
+   })
+  })
+  return staticList
+})
+const titleData = computed(()=>{
+  const staticList =[]; 
+  titleList.value.forEach((title)=>{
+    
+   const employeeNumber = employeeList.value.filter((employee)=>{
+    return employee.company.title===title
+   }).length;
+   staticList.push({
+    type:title,
+    value: employeeNumber
+   })
+  })
+  return staticList 
+})
+ 
+    return{employeeList, getData, getOneEmployee, currentEmployee, deleteEmployee, getUpdated, departmentList, titleList, maleNumber, femaleNumber, departmentData, titleData}
 })  
 
 export default useEmployees

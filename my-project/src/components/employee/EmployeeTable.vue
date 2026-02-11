@@ -7,11 +7,11 @@ import { notification } from "ant-design-vue";
 import {
   ExclamationCircleOutlined,
   VerticalAlignBottomOutlined,
-  LoadingOutlined,
 } from "@ant-design/icons-vue";
 import { createVNode } from "vue";
 import { Modal } from "ant-design-vue";
 import exportCSV from "../../composable/useExportCSV";
+import Loading from "../../common/Loading.vue";
 const employeeStore = useEmployees();
 const employeeList = defineModel("list");
 const criteria = defineModel("criteria");
@@ -92,19 +92,7 @@ const handleDelete = (id) => {
 const handleExport = () => {
   exportCSV(columns.slice(0, [columns.length - 1]), employeeList.value);
 };
-const loadingConfig = computed(() => {
-  return {
-    spinning: UIStore.isLoading,
 
-    indicator: h(LoadingOutlined, {
-      style: {
-        fontSize: "40px",
-        color: "cyan",
-      },
-      spin: true,
-    }),
-  };
-});
 onMounted(async () => {
   await employeeStore.getData();
 });
@@ -124,9 +112,7 @@ onMounted(async () => {
       <VerticalAlignBottomOutlined /> Export to CSV</a-button
     >
   </a-flex>
-  <div class="spin-container" v-if="UIStore.isLoading">
-    <a-spin :spinning="UIStore.isLoading" size="large"> </a-spin>
-  </div>
+  <Loading v-model:is-loading="UIStore.isLoading" />
   <a-table
     :loading="false"
     :columns="columns"
@@ -162,18 +148,3 @@ onMounted(async () => {
     </template>
   </a-table>
 </template>
-<style scoped>
-.spin-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(255, 255, 255, 0.8);
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-</style>

@@ -106,14 +106,14 @@ watch([query, criteria], () => {
             None</a-menu-item
           >
           <a-menu-item
-            v-for="employee in employeeStore.employeeList"
+            v-for="department in employeeStore.departmentList"
             @click="
               () => {
-                criteria.department = employee.company.department;
+                criteria.department = department;
               }
             "
           >
-            {{ employee.company.department }}
+            {{ department }}
           </a-menu-item>
         </a-menu>
       </template>
@@ -136,14 +136,14 @@ watch([query, criteria], () => {
             None</a-menu-item
           >
           <a-menu-item
-            v-for="employee in employeeStore.employeeList"
+            v-for="title in employeeStore.titleList"
             @click="
               () => {
-                criteria.title = employee.company.title;
+                criteria.title = title;
               }
             "
           >
-            {{ employee.company.title }}
+            {{ title }}
           </a-menu-item>
         </a-menu>
       </template>

@@ -1,16 +1,18 @@
 <script setup>
-import { ref, h } from "vue";
-import { useRouter } from "vue-router";
+import { ref, h, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import {
   UserOutlined,
-  UploadOutlined,
   LogoutOutlined,
   ExclamationCircleOutlined,
+  LineChartOutlined,
 } from "@ant-design/icons-vue";
 import useAuthStore from "../stores/auth";
 import { Modal } from "ant-design-vue";
-const selectedKeys = ref(["dashboard"]);
+const route = useRoute();
+const selectedKeys = ref([route.name]);
 const router = useRouter();
+
 const authStore = useAuthStore();
 const handleLogout = () => {
   Modal.confirm({
@@ -23,6 +25,12 @@ const handleLogout = () => {
     onCancel() {},
   });
 };
+watch(
+  () => route.name,
+  (newRoute) => {
+    selectedKeys.value = [newRoute];
+  },
+);
 </script>
 <template>
   <a-layout style="min-height: 100vh">
@@ -31,14 +39,28 @@ const handleLogout = () => {
       collapsible
       v-if="authStore.user.role === 'admin'"
     >
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-        <a-menu-item key="dashboard">
+      <a-menu theme="dark" mode="inline" v-model:selectedKeys="selectedKeys">
+        <a-menu-item
+          key="Dashboard"
+          @click="
+            () => {
+              router.push('/dashboard');
+            }
+          "
+        >
           <user-outlined />
           <span>Employees </span>
         </a-menu-item>
-        <a-menu-item key="settings">
-          <upload-outlined />
-          <span>Settings</span>
+        <a-menu-item
+          key="Chart"
+          @click="
+            () => {
+              router.push('/chart');
+            }
+          "
+        >
+          <LineChartOutlined />
+          <span>Analysis</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
