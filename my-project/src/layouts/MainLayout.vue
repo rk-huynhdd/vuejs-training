@@ -93,7 +93,9 @@ watch(
           <a-button type="primary" ghost @click="router.push('/profile')">
             <UserOutlined /> View profile</a-button
           >
-
+          <a-button type="primary" @click="router.push('/leave')">
+            Leaving
+          </a-button>
           <a-button type="primary" danger @click="handleLogout"
             ><LogoutOutlined /> Logout</a-button
           >

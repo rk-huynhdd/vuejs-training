@@ -9,6 +9,10 @@ import Cookies from "js-cookie";
 import NotAllowed from "../pages/system/NotAllowed.vue";
 import NotFound from "../pages/system/NotFound.vue";
 import Chart from "../pages/admin/Chart.vue";
+import EmployeeLeave from "../pages/employee/EmployeeLeave.vue";
+import AdminLeave from "../pages/admin/AdminLeave.vue";
+
+import FormDetails from "../pages/admin/FormDetails.vue";
 
 const routes = [
     {
@@ -93,6 +97,43 @@ const routes = [
             requireLoggedIn: true
         }
     }, 
+    {
+        path:'/leave', 
+        name: 'EmployeeLeave',
+        component:EmployeeLeave,
+          meta:{
+            requireLoggedIn: true
+        },
+        beforeEnter:()=>{
+            if(localStorage.getItem('role')==='admin'){
+                return{
+                    name:"AdminLeave"
+                }
+            }
+        }
+
+    }, 
+    {
+        path:'/admin/leave',
+        name:"AdminLeave",
+        component:AdminLeave,
+     
+        beforeEnter:(to, from )=>{
+            if(localStorage.getItem('role')!=='admin'){
+                return{
+                    name:"NotAllowed"
+                }
+            }
+
+        }
+    },
+    {
+        path:"/admin/leave/:formId",
+       
+                name:"FormDetails",
+                component: FormDetails
+        
+    },
     {    path:"/403",
         name:'NotAllowed',
         component:NotAllowed
