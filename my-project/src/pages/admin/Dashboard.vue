@@ -12,7 +12,39 @@ const UIStore = useUiStore();
 const name = ref("");
 const query = ref("");
 const criteria = ref({});
-
+const columns = [
+  {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Name",
+    dataIndex: "username",
+    key: "name",
+    sorter: true,
+  },
+  {
+    title: "Avatar",
+    dataIndex: "image",
+    key: "avt",
+  },
+  {
+    title: "Job Title",
+    dataIndex: ["company", "title"],
+    key: "job",
+  },
+  {
+    title: "Department",
+    dataIndex: ["company", "department"],
+    key: "department",
+  },
+  {
+    title: "Actions",
+    key: "action",
+    fixed: "right",
+  },
+];
 const filteredEmployees = computed(() => {
   let newList = employeeStore.employeeList.filter((person) => {
     return person.username.includes(query.value.toLocaleLowerCase().trim());
@@ -82,6 +114,8 @@ onMounted(async () => {
     <EmployeeTable
       v-model:list="filteredEmployees"
       v-model:criteria="criteria"
+      :columns="columns"
+      rowKey="id"
     />
   </MainLayout>
 </template>

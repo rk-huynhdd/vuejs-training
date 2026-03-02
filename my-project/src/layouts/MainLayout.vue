@@ -29,6 +29,7 @@ watch(
   () => route.name,
   (newRoute) => {
     selectedKeys.value = [newRoute];
+    console.log(selectedKeys.value);
   },
 );
 </script>
@@ -62,6 +63,9 @@ watch(
           <LineChartOutlined />
           <span>Analysis</span>
         </a-menu-item>
+        <a-menu-item @click="router.push('/admin/leave')" key="AdminLeave">
+          <span>Leaving</span>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <a-layout>
@@ -93,9 +97,7 @@ watch(
           <a-button type="primary" ghost @click="router.push('/profile')">
             <UserOutlined /> View profile</a-button
           >
-          <a-button type="primary" @click="router.push('/leave')">
-            Leaving
-          </a-button>
+
           <a-button type="primary" danger @click="handleLogout"
             ><LogoutOutlined /> Logout</a-button
           >

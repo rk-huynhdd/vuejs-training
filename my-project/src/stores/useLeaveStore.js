@@ -42,8 +42,14 @@ const useLeaveStore = defineStore('leave',  ()=>{
   
   }
   const getAllForms = async ()=>{
+     const UIStore= useUiStore(); 
+     try{
+  UIStore.isLoading= true; 
   const keys = await localforage.keys();
-  for(const key of keys){
+ 
+
+    
+    for(const key of keys){
     let check=true; 
     const forms = await localforage.getItem(key);
     forms.forEach((form)=>{
@@ -62,6 +68,13 @@ const useLeaveStore = defineStore('leave',  ()=>{
     
     
   }
+} catch (error) {
+  UIStore.showError=true;
+  UIStore.error= "Something went wrong"
+}
+finally{
+  UIStore.isLoading=false
+}
  
   }
   const getFormDetails =  async (formId)=>{
@@ -75,17 +88,23 @@ const useLeaveStore = defineStore('leave',  ()=>{
   }
 
   const changeFormStatus = async (userId, formId,  status)=>{
-    
+   
+  
     const UIStore = useUiStore(); 
-   const currentForms = await localforage.getItem(userId);
+   if(!status){
+     UIStore.showError=true;
+     UIStore.error="Invalid status" ;
+     return
+    }
+   try{
+    UIStore.isLoading=true; 
+     const currentForms = await localforage.getItem(userId);
    currentForms.forEach((items, index)=>{
     if(items.formId===formId){
    currentForms[index].status= status;
     }
    
    })
-   try{
-    UIStore.isLoading=true; 
     await localforage.setItem(userId,currentForms );
      UIStore.showSuccess=true;
     UIStore.success="Saved your changes successfully. "; 
@@ -101,6 +120,7 @@ const useLeaveStore = defineStore('leave',  ()=>{
    
 
   }
+
   const updateForm=async  (formData)=>{
    const forms = await localforage.getItem(formData.userId);
    forms.forEach((form, index)=>{
