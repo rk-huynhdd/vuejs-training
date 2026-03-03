@@ -11,13 +11,14 @@ else{
    }
 }
 }
-export default function exportCSV (columns, data, filename='Employee.csv'){
+export default function exportCSV (columns, data, filename){
 const headers = columns.map(c=>c.title).join(',')
+
 const rows = data.map(row => {
     return columns.map(col => {
       
       let value = getNestedValue(row, col.dataIndex); 
-     
+       
      
       value = value.toString().replace(/"/g, '""'); 
       return `"${value}"`; 

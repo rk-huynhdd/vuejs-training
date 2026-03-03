@@ -8,3 +8,4 @@ import router from './routes/indnex'
 const pinia = createPinia();
 
 createApp(App).use(pinia).use(Antd).use(router).mount('#app')
+                    

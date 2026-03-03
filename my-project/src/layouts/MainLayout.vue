@@ -93,6 +93,12 @@ watch(
             @click="router.push('/profile')"
           >
           </a-avatar>
+          <a-button
+            type="primary"
+            v-if="authStore.user.role !== 'admin'"
+            @click="router.push('/leave')"
+            >Leaving form</a-button
+          >
 
           <a-button type="primary" ghost @click="router.push('/profile')">
             <UserOutlined /> View profile</a-button

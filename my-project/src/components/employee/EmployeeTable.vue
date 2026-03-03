@@ -55,6 +55,7 @@ const handleDelete = (id) => {
       employeeStore.deleteEmployee(id);
       openNotification();
       selected.value = [];
+      selectedRecord.value = [];
     },
     onCancel() {},
     class: "test",
@@ -79,8 +80,12 @@ const handleChangeMulti = () => {
   temporaryStatus.value = undefined;
   selectedRecord.value = [];
 };
-const handleExport = () => {
-  exportCSV(columns.slice(0, [columns.length - 1]), employeeList.value);
+const handleExport = (fileName) => {
+  exportCSV(
+    props.columns.slice(0, [props.columns.length - 1]),
+    employeeList.value,
+    fileName,
+  );
 };
 
 onMounted(async () => {
@@ -101,7 +106,11 @@ onMounted(async () => {
     <a-select
       v-model:value="temporaryStatus"
       style="width: 200px; margin-right: 30px"
-      :disabled="selected.length === 0 && props.rowKey === 'formId'"
+      v-show="props.rowKey === 'formId'"
+      :disabled="
+        (selected.length === 0 && props.rowKey === 'formId') ||
+        props.rowKey !== 'formId'
+      "
     >
       <template #placeholder> <AppstoreTwoTone />Change status</template>
 
@@ -112,11 +121,11 @@ onMounted(async () => {
         ><a-tag color="error">Reject</a-tag></a-select-option
       >
       <a-select-option value="Pending"
-        ><a-tag color="warning"></a-tag
-      ></a-select-option>
+        ><a-tag color="warning">Pending </a-tag>
+      </a-select-option>
     </a-select>
     <a-button
-      v-if="selected.length > 0"
+      v-if="selected.length > 0 && props.rowKey === 'formId'"
       type="primary"
       @click="handleChangeMulti"
       style="margin-right: 30px"
@@ -124,7 +133,7 @@ onMounted(async () => {
       Apply</a-button
     >
 
-    <a-button type="primary" @click="handleExport">
+    <a-button type="primary" @click="handleExport('Data')">
       <VerticalAlignBottomOutlined /> Export to CSV</a-button
     >
   </a-flex>
@@ -171,7 +180,7 @@ onMounted(async () => {
             }
           "
         >
-          <a-select-option value="Pending">
+          <a-select-option value="Pending" v-if="selected">
             <a-tag color="warning">Pending</a-tag>
           </a-select-option>
           <a-select-option value="Reject ">
@@ -180,16 +189,6 @@ onMounted(async () => {
           <a-select-option value="Approve">
             <a-tag color="success">Approve</a-tag></a-select-option
           >
-          <!-- <a-tag
-            :color="
-              record.status === 'Approve'
-                ? 'success'
-                : status === 'Reject'
-                  ? 'error'
-                  : 'warning'
-            "
-            >{{ record.status }}</a-tag
-          > -->
         </a-select>
       </template>
       <template v-if="column.key === 'form-action'">
