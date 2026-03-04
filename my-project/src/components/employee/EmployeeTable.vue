@@ -183,7 +183,7 @@ onMounted(async () => {
           <a-select-option value="Pending" v-if="selected">
             <a-tag color="warning">Pending</a-tag>
           </a-select-option>
-          <a-select-option value="Reject ">
+          <a-select-option value="Reject">
             <a-tag color="error">Reject</a-tag></a-select-option
           >
           <a-select-option value="Approve">

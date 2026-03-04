@@ -59,6 +59,9 @@ onMounted(async () => {
     "
   />
   <a-form
+    :labelAlign="'left'"
+    :label-col="{ span: 4 }"
+    :wrapper-col="{ span: 16 }"
     v-if="leaveStore.formDetails"
     style="
       max-width: 50%;
@@ -90,7 +93,10 @@ onMounted(async () => {
         </a-select-option>
       </a-select>
     </a-form-item>
-
-    <a-button type="primary" html-type="submit"> Confirm status </a-button>
+    <a-flex justify="center">
+      <a-button type="primary" html-type="submit">
+        Confirm status
+      </a-button></a-flex
+    >
   </a-form>
 </template>

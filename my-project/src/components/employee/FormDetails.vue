@@ -11,7 +11,13 @@ const saveFormData = () => {
 };
 </script>
 <template>
-  <a-form @submit.prevent="saveFormData" :style="{ marginTop: '40px' }">
+  <a-form
+    @submit.prevent="saveFormData"
+    :style="{ marginTop: '40px' }"
+    labelAlign="left"
+    :label-col="{ span: 8 }"
+    :wrapper-col="{ span: 16 }"
+  >
     <a-form-item label="Name">
       <a-input
         v-model:value="formData.name"

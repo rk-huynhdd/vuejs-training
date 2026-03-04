@@ -120,6 +120,12 @@ onMounted(async () => {
               v-model:value="criteria.status"
               class="custom-select"
               allowClear
+              @change="
+                (value) => {
+                  console.log(value);
+                  console.log(filteredForms);
+                }
+              "
             >
               <template #placeholder>
                 <AppstoreTwoTone /> Select form status
